@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: messenger_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  redis:
+    image: redis:7-alpine
+    container_name: messenger_redis
+    restart: always
+    networks:
+      - backend
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: messenger_backend
+    restart: always
+    environment:
+      - ConnectionStrings__Default=Host=postgres;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - Jwt__Key=${JWT_SECRET}
+      - Redis__ConnectionString=${REDIS_CONNECTION}
+    volumes:
+      - uploads:/app/uploads
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - backend
+      - frontend
+
+  nginx:
+    image: nginx:alpine
+    container_name: messenger_nginx
+    restart: always
+    ports:
+      - "0.0.0.0:5000:80"
+    command: /bin/sh -c "mkdir -p /usr/share/nginx/html/uploads && nginx -g 'daemon off;'"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - uploads:/usr/share/nginx/html/uploads
+      - ./frontend:/usr/share/nginx/html
+    depends_on:
+      - backend
+    networks:
+      - frontend
+
+volumes:
+  postgres_data:
+  uploads:
+
+networks:
+  backend:
+  frontend:
