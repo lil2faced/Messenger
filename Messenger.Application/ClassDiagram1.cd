@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Messenger.Application.DTOs.AttachmentDto">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>DTOs\AttachmentDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Messenger.Application.DTOs.ChatContactDto">
+    <Position X="6.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABEAAAAAAAAAAAAAAAAAgAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>DTOs\ChatContactDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Messenger.Application.DTOs.LoginDto">
+    <Position X="4.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>DTOs\LoginDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Messenger.Application.DTOs.MessageDto">
+    <Position X="3" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAgEBAAAAAEICCAQAAAAAAABAAAAAACACAAAAAA=</HashCode>
+      <FileName>DTOs\MessageDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Messenger.Application.DTOs.RegisterDto">
+    <Position X="4.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAACAAAAAAAAAAAAAAAAAAAAACAAAQAAAAAAA=</HashCode>
+      <FileName>DTOs\RegisterDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Messenger.Application.DTOs.UpdateProfileDto">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DTOs\UpdateProfileDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Messenger.Application.DTOs.UserDto">
+    <Position X="4.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DTOs\UserDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Messenger.Application.Services.AuthService">
+    <Position X="2.5" Y="6" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAigAAAAAAAAACAAAAAIAAAAQAgAAAAAAAAAAA=</HashCode>
+      <FileName>Services\AuthService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Messenger.Application.Services.MessageService">
+    <Position X="0.5" Y="6" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAiAAAAAAAAIAAAAAAAIAAAAAAAEAAAAAAAAAQ=</HashCode>
+      <FileName>Services\MessageService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Messenger.Application.Services.UserService">
+    <Position X="4.5" Y="6" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAgAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAIAAA=</HashCode>
+      <FileName>Services\UserService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Messenger.Application.Validators.LoginDtoValidator">
+    <Position X="0.5" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Validators\LoginDtoValidator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Messenger.Application.Validators.RegisterDtoValidator">
+    <Position X="0.5" Y="2" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Validators\RegisterDtoValidator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Messenger.Application.Validators.UpdateProfileDtoValidator">
+    <Position X="0.5" Y="3.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Validators\UpdateProfileDtoValidator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Messenger.Application.Interfaces.IAuthService">
+    <Position X="0.5" Y="12.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IAuthService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Messenger.Application.Interfaces.IFileStorageService">
+    <Position X="3" Y="12.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IFileStorageService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Messenger.Application.Interfaces.IHashService">
+    <Position X="6.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAACAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IHashService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Messenger.Application.Interfaces.IMessageService">
+    <Position X="0.5" Y="9.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAACAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Interfaces\IMessageService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Messenger.Application.Interfaces.ITokenService">
+    <Position X="3" Y="9.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\ITokenService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Messenger.Application.Interfaces.IUserConnectionManager">
+    <Position X="3" Y="10.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAACAAAACAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Interfaces\IUserConnectionManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Messenger.Application.Interfaces.IUserService">
+    <Position X="0.5" Y="11" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
+      <FileName>Interfaces\IUserService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
