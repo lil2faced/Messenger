@@ -1,4 +1,4 @@
-# MessengerApp — Real-time мессенджер на ASP.NET Core + SignalR
+# Real-time мессенджер на ASP.NET Core + SignalR
 
 Современное клиент-серверное приложение для обмена мгновенными сообщениями, изображениями и голосовыми записями.  
 Бэкенд построен на **ASP.NET Core 8** с **SignalR**, фронтенд — чистый **HTML/CSS/JS**, всё разворачивается через **Docker Compose**.
