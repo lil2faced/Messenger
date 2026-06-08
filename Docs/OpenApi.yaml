@@ -1,0 +1,433 @@
+openapi: 3.0.3
+info:
+  title: MessengerApp API
+  description: |
+    API для мессенджера реального времени.
+    Аутентификация осуществляется через JWT-токены.
+    Для обмена сообщениями в реальном времени используется SignalR-хаб (не описан в данной спецификации).
+  version: 1.0.0
+  contact:
+    name: Разработчик
+    email: support@example.com
+
+servers:
+  - url: http://localhost/api
+    description: Локальный сервер для разработки
+  - url: https://yourdomain.com/api
+    description: Продакшн-сервер
+
+security:
+  - bearerAuth: []   # применяется ко всем эндпоинтам, если не переопределено
+
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Регистрация нового пользователя
+      description: Создаёт учётную запись. Пароль хэшируется на сервере.
+      security: []   # без аутентификации
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: Успешная регистрация
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '400':
+          description: Ошибка валидации (FluentValidation)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '409':
+          description: Конфликт (логин, email или никнейм уже заняты)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Вход в систему
+      description: Возвращает JWT-токен при успешной аутентификации.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Успешный вход
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Ошибка валидации
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Неверные учётные данные
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /users/search:
+    get:
+      tags:
+        - Users
+      summary: Поиск пользователей по никнейму
+      description: Возвращает список пользователей, чей никнейм содержит заданную подстроку (минимум 2 символа).
+      parameters:
+        - name: query
+          in: query
+          required: true
+          description: Поисковый запрос (часть никнейма)
+          schema:
+            type: string
+            minLength: 2
+      responses:
+        '200':
+          description: Массив найденных пользователей
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDto'
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /users/profile:
+    put:
+      tags:
+        - Users
+      summary: Обновление никнейма текущего пользователя
+      description: Изменяет отображаемое имя. Требуется авторизация.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+      responses:
+        '200':
+          description: Никнейм успешно обновлён
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        '400':
+          description: Ошибка валидации (никнейм пустой или не соответствует требованиям)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+        '409':
+          description: Никнейм уже занят другим пользователем
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /messages/contacts:
+    get:
+      tags:
+        - Messages
+      summary: Получение списка контактов
+      description: Возвращает всех собеседников, с которыми была переписка, с последним сообщением. Сортировка по убыванию времени.
+      responses:
+        '200':
+          description: Список контактов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContactDto'
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /messages/conversation/{otherUserId}:
+    get:
+      tags:
+        - Messages
+      summary: Получение истории сообщений
+      description: Загружает переписку между текущим пользователем и собеседником. Поддерживает пагинацию.
+      parameters:
+        - name: otherUserId
+          in: path
+          required: true
+          description: Идентификатор второго участника чата
+          schema:
+            type: string
+            format: uuid
+        - name: skip
+          in: query
+          description: Количество пропускаемых сообщений
+          schema:
+            type: integer
+            default: 0
+        - name: take
+          in: query
+          description: Максимальное количество загружаемых сообщений
+          schema:
+            type: integer
+            default: 50
+      responses:
+        '200':
+          description: История сообщений
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MessageDto'
+        '500':
+          description: Внутренняя ошибка сервера
+
+  /messages/upload:
+    post:
+      tags:
+        - Messages
+      summary: Загрузка файла (изображения или голосового сообщения)
+      description: Загружает файл на сервер и возвращает относительный URL.
+      parameters:
+        - name: type
+          in: query
+          required: true
+          description: Тип загружаемого файла
+          schema:
+            type: string
+            enum: [image, voice]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Файл для загрузки
+              required:
+                - file
+      responses:
+        '200':
+          description: Файл успешно загружен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadResponse'
+        '400':
+          description: Файл не выбран или неверный тип
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetail'
+        '500':
+          description: Внутренняя ошибка сервера
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT-токен, полученный при входе. Используйте значение "Bearer <token>".
+
+  schemas:
+    RegisterRequest:
+      type: object
+      required:
+        - login
+        - password
+        - email
+        - nickname
+      properties:
+        login:
+          type: string
+          minLength: 3
+          maxLength: 50
+          description: Логин пользователя
+        password:
+          type: string
+          minLength: 6
+          description: Пароль (будет захэширован)
+        email:
+          type: string
+          format: email
+          description: Адрес электронной почты
+        nickname:
+          type: string
+          minLength: 3
+          maxLength: 30
+          description: Отображаемое имя
+
+    LoginRequest:
+      type: object
+      required:
+        - loginOrEmail
+        - password
+      properties:
+        loginOrEmail:
+          type: string
+          description: Логин или Email пользователя
+        password:
+          type: string
+          description: Пароль
+
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: JWT-токен
+
+    UpdateProfileRequest:
+      type: object
+      required:
+        - nickname
+      properties:
+        nickname:
+          type: string
+          minLength: 3
+          maxLength: 30
+          description: Новый никнейм
+
+    UserDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Идентификатор пользователя
+        nickname:
+          type: string
+          description: Никнейм
+
+    ContactDto:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+        nickname:
+          type: string
+        lastMessage:
+          type: string
+          nullable: true
+          description: Текст последнего сообщения (может быть null)
+        lastMessageTime:
+          type: string
+          format: date-time
+          nullable: true
+
+    AttachmentDto:
+      type: object
+      properties:
+        fileUrl:
+          type: string
+          description: Относительный путь к файлу
+        type:
+          type: string
+          enum: [image, voice]
+          description: Тип вложения
+
+    MessageDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        senderId:
+          type: string
+          format: uuid
+        senderNickname:
+          type: string
+        text:
+          type: string
+          nullable: true
+          description: Текст сообщения (может отсутствовать)
+        repliedToMessageId:
+          type: string
+          format: uuid
+          nullable: true
+          description: ID сообщения, на которое отвечают
+        repliedToText:
+          type: string
+          nullable: true
+        repliedToSenderNickname:
+          type: string
+          nullable: true
+        repliedToAttachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttachmentDto'
+          description: Вложения цитируемого сообщения
+        status:
+          type: string
+          enum: [Sent, Delivered, Read]
+          description: Статус доставки
+        createdAt:
+          type: string
+          format: date-time
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttachmentDto'
+          description: Вложения данного сообщения
+        isMine:
+          type: boolean
+          description: Флаг, указывающий, что сообщение отправлено текущим пользователем
+
+    UploadResponse:
+      type: object
+      properties:
+        url:
+          type: string
+          description: Относительный URL загруженного файла
+
+    SuccessMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Операция выполнена успешно
+
+    ValidationError:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: string
+          description: Список ошибок валидации
+
+    ErrorDetail:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Описание ошибки

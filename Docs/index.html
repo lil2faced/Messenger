@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Документация MessengerApp API</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --primary: #60a5fa;
+      --primary-hover: #3b82f6;
+      --text: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --border: #334155;
+      --code-bg: #1e293b;
+      --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+      --radius: 8px;
+      --sidebar-width: 260px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 16px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+
+    .sidebar h3 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+      margin: 16px 0 8px;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 6px 8px;
+      border-radius: 4px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 14px;
+      transition: background 0.15s;
+    }
+
+    .sidebar a:hover {
+      background: var(--code-bg);
+    }
+
+    /* Main content */
+    .main {
+      flex: 1;
+      padding: 32px 40px;
+      max-width: 900px;
+    }
+
+    h1, h2, h3, h4 {
+      color: var(--text);
+      margin-top: 32px;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    h1 { font-size: 2em; margin-top: 0; }
+    h2 { font-size: 1.5em; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+    h3 { font-size: 1.2em; }
+
+    p {
+      margin-bottom: 12px;
+      color: var(--text-secondary);
+    }
+
+    code {
+      background: var(--code-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 0.9em;
+      color: #f1f5f9;
+    }
+
+    pre {
+      background: var(--code-bg);
+      padding: 16px;
+      border-radius: var(--radius);
+      overflow-x: auto;
+      margin-bottom: 16px;
+      border: 1px solid var(--border);
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+      font-size: 13px;
+      color: #cbd5e1;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .callout {
+      background: #1e293b;
+      border-left: 4px solid var(--primary);
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 16px;
+    }
+
+    th, td {
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: var(--code-bg);
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .tab-buttons {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 12px;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      border-bottom: 2px solid transparent;
+      transition: 0.15s;
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .tab-pane {
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 16px;
+      }
+      .main {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <h2 style="font-size:18px; margin-bottom:16px; color: var(--text);">MessengerApp API</h2>
+    <a href="#быстрый-старт">Быстрый старт</a>
+    <h3>Общее</h3>
+    <a href="#аутентификация">Аутентификация</a>
+    <a href="#ошибки">Ошибки</a>
+    <h3>Endpoints</h3>
+    <a href="#auth">Auth</a>
+    <a href="#users">Users</a>
+    <a href="#messages">Messages</a>
+    <h3>Realtime</h3>
+    <a href="#signalr">SignalR-хаб</a>
+    <h3>Модели</h3>
+    <a href="#модели-данных">Модели данных</a>
+  </nav>
+
+  <main class="main">
+    <h1>MessengerApp API</h1>
+    <p>API для мессенджера реального времени. Для защищённых запросов используется JWT-токен, полученный через endpoint входа. Обмен сообщениями в реальном времени осуществляется через SignalR-хаб.</p>
+
+    <div class="callout">
+      <strong>Базовые URL:</strong><br>
+      Локальная разработка: <code>http://localhost/api</code><br>
+      Продакшн: <code>https://yourdomain.com/api</code>
+    </div>
+
+    <!-- Быстрый старт -->
+    <h2 id="быстрый-старт">Быстрый старт</h2>
+    <p>Зарегистрируйте пользователя, получите токен и выполните первый защищённый запрос.</p>
+
+    <h3>1. Регистрация</h3>
+    <pre><code>curl -X POST "http://localhost/api/auth/register" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "login": "ivan.petrov",
+    "password": "strong-password",
+    "email": "ivan@example.com",
+    "nickname": "Ivan"
+  }'</code></pre>
+    <p>Ответ:</p>
+    <pre><code>{ "message": "Операция выполнена успешно" }</code></pre>
+
+    <h3>2. Получение JWT-токена</h3>
+    <pre><code>curl -X POST "http://localhost/api/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "loginOrEmail": "ivan.petrov",
+    "password": "strong-password"
+  }'</code></pre>
+    <p>Ответ:</p>
+    <pre><code>{ "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." }</code></pre>
+
+    <h3>3. Защищённый запрос</h3>
+    <pre><code>curl -X GET "http://localhost/api/users/search?query=Iv" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."</code></pre>
+    <p>Ответ:</p>
+    <pre><code>[
+  { "id": "7f9f0f3d-4f7e-4b2d-9a0f-21a8f8d7c111", "nickname": "Ivan" }
+]</code></pre>
+
+    <!-- Аутентификация -->
+    <h2 id="аутентификация">Аутентификация</h2>
+    <p>Все защищённые endpoints требуют заголовок <code>Authorization: Bearer &lt;token&gt;</code>. Исключения: регистрация и вход.</p>
+
+    <!-- Auth Endpoints -->
+    <h2 id="auth">Auth</h2>
+    <div class="card">
+      <h3>POST /auth/register</h3>
+      <p>Создаёт учётную запись. Пароль хэшируется на сервере.</p>
+      <h4>Тело запроса</h4>
+      <table>
+        <tr><th>Поле</th><th>Тип</th><th>Ограничения</th><th>Описание</th></tr>
+        <tr><td>login</td><td>string</td><td>3-50 символов</td><td>Логин</td></tr>
+        <tr><td>password</td><td>string</td><td>мин. 6 символов</td><td>Пароль (захэшируется)</td></tr>
+        <tr><td>email</td><td>string</td><td>формат email</td><td>Адрес почты</td></tr>
+        <tr><td>nickname</td><td>string</td><td>3-30 символов</td><td>Отображаемое имя</td></tr>
+      </table>
+      <h4>Ответы</h4>
+      <p><code>200</code> — успешная регистрация<br>
+         <code>400</code> — ошибка валидации<br>
+         <code>409</code> — конфликт (занятый логин/email/никнейм)</p>
+    </div>
+
+    <div class="card">
+      <h3>POST /auth/login</h3>
+      <p>Возвращает JWT-токен.</p>
+      <table>
+        <tr><th>Поле</th><th>Тип</th><th>Обязательное</th><th>Описание</th></tr>
+        <tr><td>loginOrEmail</td><td>string</td><td>Да</td><td>Логин или email</td></tr>
+        <tr><td>password</td><td>string</td><td>Да</td><td>Пароль</td></tr>
+      </table>
+    </div>
+
+    <!-- Users Endpoints -->
+    <h2 id="users">Users</h2>
+    <div class="card">
+      <h3>GET /users/search?query={query}</h3>
+      <p>Поиск пользователей по никнейму (мин. 2 символа).</p>
+      <p><strong>Ответ:</strong> массив объектов <code>{ id, nickname }</code></p>
+    </div>
+
+    <div class="card">
+      <h3>PUT /users/profile</h3>
+      <p>Обновление никнейма текущего пользователя. Тело: <code>{ "nickname": "Новый ник" }</code></p>
+    </div>
+
+    <!-- Messages Endpoints -->
+    <h2 id="messages">Messages</h2>
+    <div class="card">
+      <h3>GET /messages/contacts</h3>
+      <p>Список собеседников с последним сообщением.</p>
+    </div>
+
+    <div class="card">
+      <h3>GET /messages/conversation/{otherUserId}</h3>
+      <p>История сообщений. Параметры: <code>skip</code>, <code>take</code>.</p>
+    </div>
+
+    <div class="card">
+      <h3>POST /messages/upload?type=image|voice</h3>
+      <p>Загрузка файла. Ответ: <code>{ "url": "/uploads/..." }</code></p>
+    </div>
+
+    <!-- Модели данных -->
+    <h2 id="модели-данных">Модели данных</h2>
+    <h3>MessageDto</h3>
+    <table>
+      <tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
+      <tr><td>id</td><td>uuid</td><td>ID сообщения</td></tr>
+      <tr><td>senderId</td><td>uuid</td><td>Отправитель</td></tr>
+      <tr><td>senderNickname</td><td>string</td><td>Никнейм отправителя</td></tr>
+      <tr><td>text</td><td>string | null</td><td>Текст</td></tr>
+      <tr><td>status</td><td>Sent | Delivered | Read</td><td>Статус</td></tr>
+      <tr><td>createdAt</td><td>ISO 8601</td><td>Время создания</td></tr>
+      <tr><td>attachments</td><td>AttachmentDto[]</td><td>Вложения</td></tr>
+      <tr><td>isMine</td><td>boolean</td><td>Отправлено ли текущим пользователем</td></tr>
+    </table>
+
+    <h3>AttachmentDto</h3>
+    <table>
+      <tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>
+      <tr><td>fileUrl</td><td>string</td><td>Относительный путь</td></tr>
+      <tr><td>type</td><td>image | voice</td><td>Тип вложения</td></tr>
+    </table>
+
+    <!-- Ошибки -->
+    <h2 id="ошибки">Ошибки</h2>
+    <table>
+      <tr><th>Код</th><th>Описание</th></tr>
+      <tr><td>400</td><td>Ошибка валидации или неверный тип файла</td></tr>
+      <tr><td>401</td><td>Неверные учётные данные</td></tr>
+      <tr><td>409</td><td>Конфликт (занятый логин/email/никнейм)</td></tr>
+      <tr><td>500</td><td>Внутренняя ошибка сервера</td></tr>
+    </table>
+
+    <!-- SignalR -->
+    <h2 id="signalr">Realtime через SignalR</h2>
+    <p>Хаб доступен по адресу: <code>wss://&lt;сервер&gt;/hubs/chat</code>. Аутентификация через <code>access_token</code> в query-строке.</p>
+
+    <h3>Методы хаба</h3>
+    <div class="card">
+      <h4>SendMessage</h4>
+      <p>Параметры: <code>recipientId</code> (string), <code>text</code> (string|null), <code>repliedToMessageId</code> (string|null), <code>attachments</code> (Attachment[]|null).</p>
+    </div>
+
+    <h3>События хаба</h3>
+    <table>
+      <tr><th>Событие</th><th>Описание</th><th>Параметр</th></tr>
+      <tr><td>ReceiveMessage</td><td>Новое входящее сообщение</td><td>Message</td></tr>
+      <tr><td>MessageSent</td><td>Подтверждение отправки</td><td>Message</td></tr>
+      <tr><td>NewContact</td><td>Появился новый контакт (первое сообщение)</td><td>Contact</td></tr>
+      <tr><td>Error</td><td>Ошибка обработки</td><td>{ message }</td></tr>
+    </table>
+
+    <h3>Примеры подключения</h3>
+    <div class="tab-buttons">
+      <button class="tab-btn active" onclick="switchTab(event, 'js')">JavaScript</button>
+      <button class="tab-btn" onclick="switchTab(event, 'cs')">C#</button>
+    </div>
+    <div class="tab-pane active" id="js">
+      <pre><code>const connection = new signalR.HubConnectionBuilder()
+  .withUrl("/hubs/chat", { accessTokenFactory: () => token })
+  .withAutomaticReconnect()
+  .build();
+
+connection.on("ReceiveMessage", msg => console.log(msg));
+connection.on("MessageSent", msg => console.log(msg));
+connection.on("NewContact", contact => console.log(contact));
+connection.start();
+
+await connection.invoke("SendMessage", recipientId, "Hello", null, null);</code></pre>
+    </div>
+    <div class="tab-pane" id="cs">
+      <pre><code>var connection = new HubConnectionBuilder()
+  .WithUrl("https://server/hubs/chat", options => {
+      options.AccessTokenProvider = () => Task.FromResult(token);
+  })
+  .Build();
+
+connection.On&lt;MessageDto&gt;("ReceiveMessage", msg => {});
+connection.On&lt;MessageDto&gt;("MessageSent", msg => {});
+await connection.StartAsync();
+
+await connection.InvokeAsync("SendMessage", recipientId, "Hello", null, null);</code></pre>
+    </div>
+
+    <h3>Жизненный цикл сообщения</h3>
+    <ol>
+      <li>Клиент вызывает <code>SendMessage</code>.</li>
+      <li>Сервер отправляет отправителю <code>MessageSent</code>.</li>
+      <li>Если получатель онлайн — ему <code>ReceiveMessage</code>, статус <code>Delivered</code>.</li>
+      <li>Если офлайн — сообщение сохраняется со статусом <code>Sent</code>.</li>
+    </ol>
+
+    <p style="margin-top:32px; color: var(--text-secondary); font-size: 14px;">
+      Документация сгенерирована из OpenAPI-спецификации и описания SignalR-хаба. Актуальная версия всегда доступна в репозитории проекта.
+    </p>
+  </main>
+
+  <script>
+    function switchTab(event, tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+  </script>
+</body>
+</html>
